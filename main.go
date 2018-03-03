@@ -21,6 +21,7 @@ func redraw_screen(s tcell.Screen, state *State) {
 	}
 
 	st := tcell.StyleDefault
+	s.Clear()
 
 	for row := 0; row < h; row++ {
 		var line_text string
@@ -30,19 +31,11 @@ func redraw_screen(s tcell.Screen, state *State) {
 		} else if from_bottom <= len(state.output) {
 			line_text = state.output[len(state.output)-from_bottom]
 		} else {
-			line_text = ""
+			continue
 		}
 
-		for col := 0; col < w; col++ {
-
-			var letter byte
-			if len(line_text) > col {
-				letter = line_text[col]
-			} else {
-				letter = ' '
-			}
-			s.SetCell(col, row, st, rune(letter))
-
+		for col, letter := range line_text {
+			s.SetCell(col, row, st, letter)
 		}
 	}
 	s.Show()
